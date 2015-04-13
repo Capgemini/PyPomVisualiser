@@ -3,17 +3,16 @@ Created on 31 Mar 2015
 
 @author: WMOORHOU
 '''
-from src.display.DisplayFactory import DisplayFactory
+from src.display.WindowManager import WindowManager
 
 class Visualiser(object):
     '''
     classdocs
     '''
-    _display = None
-    _rendered = []
+    
 
     def __init__(self):
-        self._display = DisplayFactory.getDisplayMechanism()
+        self.manager = WindowManager()
         '''
         Constructor
         '''
@@ -21,18 +20,28 @@ class Visualiser(object):
     def visualisePomStructure(self, rootNode):
         ''' calculate number of nodes '''
         if rootNode:
-            self.drawNode(rootNode, 0)
-            
+            self.extractNodes(rootNode, 0)
+    
+        self.manager.finalise()
+    
         ''' iterate over pom dependency structure'''
-    def drawNode(self, node, level):
+    def extractNodes(self, node, level):
         
+        if level > 3:
+            pass
+        self.manager.drawNode(level, node)
         ''' node.get name etc render at this level'''
         
+        print("child nodes: " + str(len(node.getChildNodes())))
+        if len(node.getDependencies()) > 0:
+            for dep in node.getDependencies():
+                self.extractNodes(dep, level+1)
+                self.manager.connectNodes(node, dep)
+                pass
+            
         
-        if node.getChildNodes():
+        if len(node.getChildNodes()) > 0:
             for child in node.getChildNodes():
-                self.drawNode(child, level+1)
-        
-    def renderNode(self, node):
-        #self._display.drawSquare(x_loc, y_loc, width, height)
-        print(node.getArtifactId())
+                self.extractNodes(child, level+1)
+                self.manager.connectNodes(node, child)
+                

@@ -8,7 +8,6 @@ from os import name
 
 class ProjectScraper(object):
     
-    __os_specific = ""
     '''
     classdocs
     platform specific detection

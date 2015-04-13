@@ -8,32 +8,24 @@ class Pom(object):
     '''
     classdocs
     '''
-    _groupId = None
-    _artifactId = None
-    _version = None
-    _fileLoc = None
-    _dependencies = []
-    _modules = []
-    _parent = None
 
-    def __init__(self, groupId, artifactId, version, fileLoc, parent=None, dependencies=None, modules=None):
+    def __init__(self, groupId, artifactId, version, fileLoc, parent=None, dependencies=None, modules=[]):
         self._groupId = groupId
         self._artifactId = artifactId
         self._version = version
         self._fileLoc = fileLoc
-        if parent:
-            self._parent = parent
-        if dependencies:
-            self._dependencies = dependencies
-        
-        if modules:
-            self._modules = modules
+        self._parent = parent
+        self._dependencies = dependencies
+        self._modules = modules
         '''
         Constructor
         '''
     
     def getGroupId(self):
-        return self._groupId
+        if self._groupId == None:
+            return ""
+        else:
+            return self._groupId
     
     def getArtifactId(self):
         return self._artifactId
@@ -55,10 +47,6 @@ class Pom(object):
 
     
 class PomDependency(object):
-    
-    _groupId = None
-    _artifactId = None
-    _version = None
     
     def __init__(self, groupId, artifactId, version):
         self._groupId = groupId

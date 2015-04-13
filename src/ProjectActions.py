@@ -4,8 +4,8 @@ Created on 31 Mar 2015
 @author: WMOORHOU
 '''
 from ProjectScraper import ProjectScraper
-from src.PomParser import PomParser
-from src.PomParser import TreeCreation
+from src.pom.PomParser import PomParser, TreeCreation
+from src.display.Visualiser import Visualiser
 
 class ProjectActions(object):
     '''
@@ -31,6 +31,11 @@ class ProjectActions(object):
         
         ''' Create POPO structure '''
         root = TreeCreation(pomPOPOs).getRootNode()
-        print(root.getArtifactId())
+        
+        print(root)
+        
+        visualise = Visualiser()
+        visualise.visualisePomStructure(root)
+        
         print("Finished gracefully")
         ''' Pass POPO structure to visualiser '''
