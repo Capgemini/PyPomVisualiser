@@ -64,15 +64,63 @@ class PomTreeNode(object):
         if node not in self._reverseDependencies:
             self._reverseDependencies.append(node)
 
+    def toShortString(self):
+        output = "artifact: " + (self.artifactId if not None else "Empty") + "\n"
+        output += "group: " + (self.groupId if not None else "Empty") + "\n"
+        data = self.getData()
+        if data != None:
+            data = data.getVersion()
+            if data != None:
+                output += "version: " + (data if not None else "Empty") + "\n"
+        return output
+
     def toString(self):
-        output = "Node out:"
-        output += "art :" + self.artifactId if not None else "Empty"
-        output += "group :" + self.groupId if not None else "Empty"
-        if self.parentNode:
-            output += "parentNode :" + self.parentNode.toString()
-        for dep in self.dependencyNodes:
-            dep.toString()
-        for dep in self._reverseDependencies:
-            dep.toString()
-        for child in self.childnodes:
-            child.toString()
+        output = ""
+        if self.getGroupId():
+            output = "GroupId: " + self.getGroupId() + "\n"
+        if self.getArtifactId():
+            output += "ArtifactId: " + self.getArtifactId() +"\n"
+        if self.getData():
+            data = self.getData()
+            if data.getVersion():
+                output += "Version: " + data.getVersion() + "\n" 
+        if self.getParent():
+            output += "\nParent:  \n"
+            if self.getParent().getGroupId() != None:
+                output += "    parent groupId: " + self.parentNode.getGroupId() + "\n"
+            if self.parentNode.getArtifactId() != None:
+                output += "    parent artifactId: " + self.parentNode.getArtifactId() + "\n"
+        
+        output += "\nDependencies: \n"
+        for dep in self.getDependencies():
+            output += "    dependency: \n"
+            if dep.getGroupId():
+                output += "        GroupID: " + dep.getGroupId() + "\n"
+            if dep.getArtifactId():
+                output += "        ArtifactId: " + dep.getArtifactId() + "\n"
+            if dep.getData():
+                if dep.getData().getVersion():
+                    output += "Version: " + dep.getData().getVersion() + "\n" 
+        
+        output += "\nDependent on this pom: \n"   
+        for dep in self.getReverseDependencyNodes():
+            output += "    Reverse dependency: \n"
+            if dep.getGroupId():
+                output += "        GroupId: " + dep.getGroupId() + "\n"
+            if dep.getArtifactId():
+                output += "        ArtifactId: " + dep.getArtifactId() + "\n"
+            if dep.getData():
+                if dep.getData().getVersion():
+                    output += "Version: " + dep.getData().getVersion() + "\n"
+        
+        output += "\nParent to: \n"   
+        for dep in self.getChildNodes():
+            output += "    Child: \n"
+            if dep.getGroupId():
+                output += "        GroupId: " + dep.getGroupId() + "\n"
+            if dep.getArtifactId():
+                output += "        ArtifactId: " + dep.getArtifactId() + "\n"
+            if dep.getData():
+                if dep.getData().getVersion():
+                    output += "Version: " + dep.getData().getVersion() + "\n"
+        return output 

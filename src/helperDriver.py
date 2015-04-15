@@ -10,7 +10,8 @@ def run():
     actions = ProjectActions()
     
     #actions.visualiseProject(r"D:\Users\wmoorhou\Documents\workspace")
-    actions.visualiseProject(r"D:\Users\wmoorhou\Downloads\args4j-master")
+    #actions.visualiseProject(r"D:\Users\wmoorhou\Downloads\args4j-master")
+    actions.visualiseProject(r"D:\Users\wmoorhou\Documents\postage-service")
     
     
     exit(1)

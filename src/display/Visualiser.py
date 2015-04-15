@@ -3,7 +3,7 @@ Created on 31 Mar 2015
 
 @author: WMOORHOU
 '''
-from src.display.WindowManager import WindowManager
+from src.display.TKWindowManager import WindowManager
 
 class Visualiser(object):
     '''
@@ -38,7 +38,6 @@ class Visualiser(object):
                 self.extractNodes(dep, level+1)
                 self.manager.connectNodes(node, dep)
                 pass
-            
         
         if len(node.getChildNodes()) > 0:
             for child in node.getChildNodes():

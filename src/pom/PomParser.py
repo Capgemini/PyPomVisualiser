@@ -5,10 +5,9 @@ Created on 31 Mar 2015
 '''
 
 from xml.dom.minidom import parse
-from src.pom.Pom import PomDependency, Pom
+from src.pom.Pom import Pom, PomDependency
 from src.pom.PomTreeNode import PomTreeNode
 from enum import Enum
-import xml.etree.ElementTree as ET
 
 class PomParser(object):
     '''
@@ -22,7 +21,7 @@ class PomParser(object):
         '''
         
     def parseFilesToPomPOPO(self, listOfFileLocs):
-        #try:
+        try:
             for file in listOfFileLocs:
                 current = file
                 tmpDom = parse(file)
@@ -30,8 +29,8 @@ class PomParser(object):
                     self.popos.append(self.DomToPOPO(tmpDom, file))
                     tmpDom.unlink()
             return self.popos   
-        #except Exception:
-            #raise PomParseError("Parser was unable to parse from file location: " + current)
+        except Exception:
+            raise PomParseError("Parser was unable to parse from file location: " + current)
     
     def DomToPOPO(self, dom, file):
         pomDeps = []
@@ -130,7 +129,7 @@ class TreeCreation(object):
                     pass
                 else:
                     par = self.inNodeList(self.nodeList, PomTreeNode(parPom.getArtifactId(), parPom.getGroupId(), NodeEnum.USERPOM, None)) 
-                    #par = self.getNodeWith(parPom.getArtifactId, parPom.getGroupId) if not None else PomTreeNode(parPom.getArtifactId(), parPom.getGroupId(), NodeEnum.USERPOM, None)
+                    # par = self.getNodeWith(parPom.getArtifactId, parPom.getGroupId) if not None else PomTreeNode(parPom.getArtifactId(), parPom.getGroupId(), NodeEnum.USERPOM, None)
                     tmpnode.setParentNode(par)
                     par.addChildNodes(tmpnode)
                 
@@ -151,19 +150,18 @@ class TreeCreation(object):
                     depNode = self.inNodeList(self.nodeList, PomTreeNode(dep.getArtifactId(), dep.getGroupId(), NodeEnum.EXTDEP, None))
                     
                     # Something causing None or bad type to be thrown into setter
-                    
-                    print("artid "  + depNode.getArtifactId())
+                    print("artid " + depNode.getArtifactId())
                     
                     tmpnode.addDependencyNode(depNode)
                     depNode.addReverseDependencyNode(tmpnode)
                     pass
                 
             ''' ################### '''
-            #self.nodeList.append(tmpnode)
+            # self.nodeList.append(tmpnode)
         self.resolveRootNode()
         ''' Count number of layers maybe?'''
     
-    def getNodeWith(self,artId, grpId):
+    def getNodeWith(self, artId, grpId):
         
         for temporaryNode in self.nodeList:
             if (temporaryNode.getGroupId() == grpId) and (temporaryNode.getArtifactId() == artId):

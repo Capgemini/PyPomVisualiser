@@ -3,7 +3,7 @@ Created on 31 Mar 2015
 
 @author: WMOORHOU
 '''
-from ProjectScraper import ProjectScraper
+from src.ProjectScraper import ProjectScraper#
 from src.pom.PomParser import PomParser, TreeCreation
 from src.display.Visualiser import Visualiser
 
@@ -17,8 +17,8 @@ class ProjectActions(object):
         '''
         Constructor
         '''
-        
-    def visualiseProject(self, loc):
+    @staticmethod
+    def visualiseProject(loc):
         
         ''' Get poms in project'''
         scraper = ProjectScraper()
@@ -35,7 +35,7 @@ class ProjectActions(object):
         print(root)
         
         visualise = Visualiser()
+        ''' Pass POPO structure to visualiser '''
         visualise.visualisePomStructure(root)
         
         print("Finished gracefully")
-        ''' Pass POPO structure to visualiser '''

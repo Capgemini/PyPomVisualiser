@@ -44,7 +44,6 @@ class Pom(object):
     
     def getModules(self):
         return self._modules
-
     
 class PomDependency(object):
     
