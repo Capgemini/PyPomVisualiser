@@ -4,8 +4,7 @@ Created on 31 Mar 2015
 @author: WMOORHOU
 '''
 from os import name
-
-from src.display.TKinterDisplay import TKinterDisplay
+from pypomvisualiser.display.TKinterDisplay import TKinterDisplay
 
 class DisplayFactory(object):
     '''

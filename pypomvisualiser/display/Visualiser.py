@@ -3,7 +3,7 @@ Created on 31 Mar 2015
 
 @author: WMOORHOU
 '''
-from src.display.TKWindowManager import WindowManager
+from pypomvisualiser.display.TKWindowManager import WindowManager
 
 class Visualiser(object):
     '''
@@ -37,8 +37,7 @@ class Visualiser(object):
             for dep in node.getDependencies():
                 self.extractNodes(dep, level+1)
                 self.manager.connectNodes(node, dep)
-                pass
-        
+
         if len(node.getChildNodes()) > 0:
             for child in node.getChildNodes():
                 self.extractNodes(child, level+1)

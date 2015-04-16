@@ -1,9 +1,9 @@
 #!/usr/local/bin/python2.7
 # encoding: utf-8
 '''
-src.PyPomArgparse -- shortdesc
+pypomvisualiser.run -- shortdesc
 
-src.PyPomArgparse is a description
+pypomvisualiser.run is a description
 
 It defines classes_and_methods
 
@@ -19,7 +19,7 @@ It defines classes_and_methods
 
 import sys
 import os
-from ProjectActions import ProjectActions
+from pypomvisualiser.ProjectActions import ProjectActions
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -88,6 +88,13 @@ USAGE
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 0
+    except Exception:
+        if DEBUG or TESTRUN:
+            raise(Exception)
+        indent = len(program_name) * " "
+        sys.stderr.write(program_name + ": " + repr(Exception) + "\n")
+        sys.stderr.write(indent + "  for help use --help")
+        return 2
 
 if __name__ == "__main__":
     if DEBUG:
@@ -100,7 +107,7 @@ if __name__ == "__main__":
     if PROFILE:
         import cProfile
         import pstats
-        profile_filename = 'src.PyPomArgparse_profile.txt'
+        profile_filename = 'pypomvisualiser.PyPomArgparse_profile.txt'
         cProfile.run('main()', profile_filename)
         statsfile = open("profile_stats.txt", "wb")
         p = pstats.Stats(profile_filename, stream=statsfile)

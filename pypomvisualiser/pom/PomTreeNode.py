@@ -38,6 +38,9 @@ class PomTreeNode(object):
 
     def getType(self):
         return self.type
+    
+    def setType(self, nodeType):
+        self.type = nodeType
 
     # reverse parent idea
     def addChildNodes(self, node):

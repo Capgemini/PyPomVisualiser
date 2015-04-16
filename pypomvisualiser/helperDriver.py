@@ -3,7 +3,7 @@ Created on 30 Mar 2015
 
 @author: WMOORHOU
 '''
-from src.ProjectActions import ProjectActions
+from pypomvisualiser.ProjectActions import ProjectActions
 
 def run():
     

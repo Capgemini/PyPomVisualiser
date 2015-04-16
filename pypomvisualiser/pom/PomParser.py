@@ -5,9 +5,14 @@ Created on 31 Mar 2015
 '''
 
 from xml.dom.minidom import parse
-from src.pom.Pom import Pom, PomDependency
-from src.pom.PomTreeNode import PomTreeNode
+from pypomvisualiser.pom.Pom import Pom, PomDependency
+from pypomvisualiser.pom.PomTreeNode import PomTreeNode
 from enum import Enum
+
+class NodeEnum(Enum):
+    EXTDEP = "#C0C0C0"
+    USERPOM = "#99CCFF"
+    ROOTPOM = "#0099FF"
 
 class PomParser(object):
     '''
@@ -205,15 +210,11 @@ class TreeCreation(object):
         else:
             self.rootNode = potentialRootNode
             print("Root node chosen: " + potentialRootNode.getArtifactId() + " " + potentialRootNode.getGroupId())
-            
+            self.rootNode.setType(NodeEnum.ROOTPOM)
             ''' Could be root node'''
             
     def getRootNode(self):
         return self.rootNode    
-
-class NodeEnum(Enum):
-    EXTDEP = "green"
-    USERPOM = "#0080FF"
 
 class PomParseError(Exception):
     
