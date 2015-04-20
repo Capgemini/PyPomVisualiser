@@ -5,7 +5,7 @@ Created on 9 Apr 2015
 '''
 
 from pypomvisualiser.display.DisplayFactory import DisplayFactory
-from pypomvisualiser.pom.PomParser import NodeEnum
+from pypomvisualiser.pom.TreeCreation import NodeEnum
 import calendar
 import time
 import random
@@ -16,39 +16,23 @@ class WindowManager(object):
     '''
     
     def __init__(self):
-        self.rendered=dict()
-        self.toBeRendered=[]
-        self.spacing = 11
-        self.baseSize = 10
-        self.scale = 10
-        self.focus = None
-        self.levelCounter = dict()
+        self.rendered = dict()
+        self.toBeRendered = []
+        self.layoutManagement = TKLayoutManagement()
         self._display = DisplayFactory.getDisplayMechanism()
-        self.spacing = self.scale * (self.spacing * 1.5) 
-        self.baseSize = self.scale * self.baseSize
         '''
         Constructor
         '''
     
     def drawNode(self, level, node):
         if not self.isNodeRendered(node):
-            if level not in self.levelCounter:
-                self.levelCounter[level] = 0
-            else:
-                self.levelCounter[level] = self.levelCounter[level] + 1
-            x_loc = self.levelCounter[level]*self.spacing
-            y_loc = (level+1)*self.spacing
-            width = self.baseSize * 1.5
-            
-            # Need to make a tag tuple
             tags = self.getTagTuple(node, level)
-            
+            self.rendered[node] = tags
+            nodeTuple = self.layoutManagement.addNodeToLayout(level)
             if node.getType() == NodeEnum.ROOTPOM:
-                self.rendered[node] = tags
-                self._display.drawSquare(x_loc, y_loc, width, self.baseSize, tags, node.getType().value, node.toString())
+                self._display.drawSquare(nodeTuple, tags, node.getType().value, node.toString())
             else:
-                self.rendered[node] = tags
-                self._display.drawCircle(x_loc, y_loc, width, self.baseSize, tags, node.getType().value, node.toString())
+                self._display.drawCircle(nodeTuple, tags, node.getType().value, node.toString())
             self._display.drawTextInId(self.rendered[node][0], tags, node.toShortString(), node.toString())
     
     def connectNodes(self, master, slave):
@@ -69,11 +53,11 @@ class WindowManager(object):
     def getTagTuple(self, node, level):
         unique = self.generateUniqueTag(node)
         nodeType = str(node.getType())
-        level = "level"+str(level)
+        level = "level" + str(level)
         return (unique, nodeType, level)
     
     def populateMenu(self):
-        #Hide node
+        # Hide node
         pass
     
     def addToRenderLaterList(self, function):
@@ -89,8 +73,50 @@ class WindowManager(object):
         else:
             return False
     
-    def organiseNodeRendering(self):
-        
+    def __organiseNodes(self):
+        tuplelist = self.layoutManagement.getStructureOrganisationTupleList()
+        for levelTuple in tuplelist:
+            self._display.move(levelTuple[0], levelTuple[1], levelTuple[2])
+        # self focus on root node
+        pass    
+    
+    def finalise(self):
+        self.__organiseNodes()
+        self.renderFromLaterList()
+        self._display.runDisplay()
+        pass
+    
+class TKLayoutManagement(object):
+    
+    def __init__(self):
+        self.spacing = 11
+        self.baseSize = 10
+        self.scale = 10
+        self.spacing = self.scale * (self.spacing * 1.5) 
+        self.baseSize = self.scale * self.baseSize
+        self.levelCounter = dict()
+        pass
+    
+    '''
+    Creates a tuple of arguments required for coordinate locations for node rendering.
+    '''
+    def addNodeToLayout(self, level):
+        if level not in self.levelCounter:
+            self.levelCounter[level] = 0
+        else:
+            self.levelCounter[level] = self.levelCounter[level] + 1
+        x_loc = self.levelCounter[level] * self.spacing
+        y_loc = (level + 1) * self.spacing
+        width = self.baseSize * 1.5
+        height = self.baseSize
+        return (x_loc, y_loc, width, height)
+    
+    '''
+    Method to create a tranformational tuple to organise nodes in a more appealing arrangement. 
+    Takes the largest number of nodes on a level, then compensates at every other level to centre all nodes.
+    Returns a list of tuples
+    '''
+    def getStructureOrganisationTupleList(self):
         highVal = 0
         for key, value in self.levelCounter.items():
             print (key)
@@ -98,18 +124,10 @@ class WindowManager(object):
                 highVal = value
         
         # work out offset
-        highValOffset = (highVal/2) * self.spacing
-        
+        highValOffset = (highVal / 2) * self.spacing
+        orgList = []
         for key, value in self.levelCounter.items():
             if value != highVal:
-                levelOffsetValue = highValOffset - ((value/2) * self.spacing)
-                self._display.move("level"+str(key), levelOffsetValue, 0)
-        
-        #self focus on root node
-        pass    
-    
-    def finalise(self):
-        self.organiseNodeRendering()
-        self.renderFromLaterList()
-        self._display.runDisplay()
-        pass
+                levelOffsetValue = highValOffset - ((value / 2) * self.spacing)
+                orgList.append(("level" + str(key), levelOffsetValue, 0))
+        return orgList

@@ -8,7 +8,7 @@ setup(
     name="PyPomVisualiser",
 
     # Version number (initial):
-    version="0.7.0",
+    version="0.8.0",
 
     # Application author details:
     author="William Moorhouse",

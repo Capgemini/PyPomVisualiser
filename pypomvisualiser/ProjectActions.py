@@ -4,7 +4,8 @@ Created on 31 Mar 2015
 @author: WMOORHOU
 '''
 from pypomvisualiser.ProjectScraper import ProjectScraper
-from pypomvisualiser.pom.PomParser import PomParser, TreeCreation
+from pypomvisualiser.pom.PomParser import PomParser
+from pypomvisualiser.pom.TreeCreation import TreeCreation
 from pypomvisualiser.display.Visualiser import Visualiser
 
 class ProjectActions(object):

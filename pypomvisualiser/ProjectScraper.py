@@ -5,6 +5,7 @@ Created on 30 Mar 2015
 '''
 from os import walk
 from os import name
+import logging
 
 class ProjectScraper(object):
     
@@ -18,8 +19,7 @@ class ProjectScraper(object):
         else:
             '''Not nt therefore likely to be posix'''
             self.__os_specific = r'/'
-            
-                
+        logging.info("ProjectScraper: the OS type is " + name)
     '''
     Recursively find all poms in project
     '''
@@ -27,10 +27,10 @@ class ProjectScraper(object):
         pomCollection = []
         for (dirpath, dirnames, filenames) in walk(location):
             if "pom.xml" in filenames:
-                print("pom found")
                 pomCollection.append(dirpath + self.__os_specific + "pom.xml")
             for tmpdir in dirnames:
                 tmp = self.getProjectPomList(tmpdir)
                 if tmp:
                     pomCollection.append(tmp)
+        logging.info("ProjectScraper has found " + str(len(pomCollection)) + " poms.xml files.")
         return pomCollection
