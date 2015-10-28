@@ -22,21 +22,21 @@ class Visualiser(object):
         if rootNode:
             self.extractNodes(rootNode, 0)
     
-        self.manager.finalise()
+        self.manager.renderWindow()
     
         ''' iterate over pom dependency structure'''
     def extractNodes(self, node, level):
         
         if level > 3:
             pass
-        self.manager.drawNode(level, node)
+        self.manager.processNode(level, node)
         ''' node.get name etc render at this level'''
         
         print("child nodes: " + str(len(node.getChildNodes())))
         if len(node.getDependencies()) > 0:
             for dep in node.getDependencies():
                 self.extractNodes(dep, level+1)
-                self.manager.connectNodes(node, dep)
+                self.manager.connectNodes(dep, node)
 
         if len(node.getChildNodes()) > 0:
             for child in node.getChildNodes():

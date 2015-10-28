@@ -24,67 +24,52 @@ class WindowManager(object):
         Constructor
         '''
     
-    def drawNode(self, level, node):
-        if not self.isNodeRendered(node):
-            tags = self.getTagTuple(node, level)
+    def processNode(self, level, node):
+        if node not in self.rendered:
+            tags = self.__getTagTuple(node, level)
             self.rendered[node] = tags
             nodeTuple = self.layoutManagement.addNodeToLayout(level)
             if node.getType() == NodeEnum.ROOTPOM:
                 self._display.drawSquare(nodeTuple, tags, node.getType().value, node.toString())
             else:
                 self._display.drawCircle(nodeTuple, tags, node.getType().value, node.toString())
-            self._display.drawTextInId(self.rendered[node][0], tags, node.toShortString(), node.toString())
+            self._display.renderTextInId(self.rendered[node][0], tags, node.toShortString(), node.toString())
     
     def connectNodes(self, master, slave):
         masterId = self.rendered.get(master)
         slaveId = self.rendered.get(slave)
         if masterId and slaveId:
-            nodeTypeValue = slave.getType().value
+            nodeTypeValue = master.getType().value
             # Queue for creation, then organise once all nodes created.
             def toRender(masterId=masterId, slaveId=slaveId, nodeTypeValue=nodeTypeValue):
                 return self._display.connectIdWithLine(masterId[0], slaveId[0], masterId[1] + masterId[2] + slaveId[1] + slaveId[2], nodeTypeValue)
-            self.addToRenderLaterList(toRender)
+            self.__addToRenderQueue(toRender)
         else:
             print("Node values could not be extracted from render list, no joining will be done")        
     
-    def generateUniqueTag(self, node):
-        return str(node.getType()) + str(calendar.timegm(time.gmtime())) + str(random.random())
+    def renderWindow(self):
+        self.__organiseNodes()
+        self.__renderQueued()
+        self._display.runDisplay()
     
-    def getTagTuple(self, node, level):
-        unique = self.generateUniqueTag(node)
+    def __getTagTuple(self, node, level):
+        unique = str(node.getType()) + str(calendar.timegm(time.gmtime())) + str(random.random())
         nodeType = str(node.getType())
         level = "level" + str(level)
         return (unique, nodeType, level)
     
-    def populateMenu(self):
-        # Hide node
-        pass
-    
-    def addToRenderLaterList(self, function):
+    def __addToRenderQueue(self, function):
         self.toBeRendered.append(function)
     
-    def renderFromLaterList(self):
+    def __renderQueued(self):
         for func in self.toBeRendered:
             func()
-    
-    def isNodeRendered(self, node):
-        if node in self.rendered:
-            return True
-        else:
-            return False
     
     def __organiseNodes(self):
         tuplelist = self.layoutManagement.getStructureOrganisationTupleList()
         for levelTuple in tuplelist:
             self._display.move(levelTuple[0], levelTuple[1], levelTuple[2])
-        # self focus on root node
-        pass    
     
-    def finalise(self):
-        self.__organiseNodes()
-        self.renderFromLaterList()
-        self._display.runDisplay()
-        pass
     
 class TKLayoutManagement(object):
     

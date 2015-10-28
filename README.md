@@ -17,7 +17,7 @@ Requirements:
   
 
 Run using:
-Python3 run.py <location of a pom>
+python pypomv.py <location of a pom>
 
 #Package Installation instructions
 cd <downloaded location>/PyPomVisualiser

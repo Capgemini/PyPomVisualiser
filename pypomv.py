@@ -29,7 +29,7 @@ __version__ = 0.8
 __date__ = '2015-04-13'
 __updated__ = '2015-04-13'
 
-DEBUG = 0
+DEBUG = 1
 TESTRUN = 0
 PROFILE = 0
 
@@ -98,9 +98,7 @@ USAGE
 
 if __name__ == "__main__":
     if DEBUG:
-        sys.argv.append("-h")
-        sys.argv.append("-v")
-        sys.argv.append("-r")
+        pass
     if TESTRUN:
         import doctest
         doctest.testmod()

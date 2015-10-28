@@ -9,21 +9,27 @@ class Display:
     __metaclass__ = ABCMeta
     
     @abstractmethod
-    def drawSquare(self, x_loc, y_loc, width, height, colour=None, content=None):
+    def drawSquare(self, xywhTuple, tags=None, colour=None, content=None):
         pass
     
     @abstractmethod
-    def drawCircle(self, x_loc, y_loc, width, height, colour=None, content=None):
+    def drawCircle(self, xywhTuple, tags=None , colour=None, content=None):
         pass
     
     @abstractmethod
-    def drawLine(self):
+    def connectIdWithLine(self, id1, id2, tags=None, colour=None):
+        pass
+    
+    @abstractmethod
+    def renderTextInId(self, tagTocentreOn, tagsToAddTo, content, funcContent):
+        pass
+    
+    @abstractmethod
+    def move(self, tag, xamount, yamount):
         pass
     
     @abstractmethod
     def runDisplay(self):
         pass
-        
-    @abstractmethod    
-    def remove(self, num):
-        pass
+
+    
